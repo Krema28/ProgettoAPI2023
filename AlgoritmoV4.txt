@@ -1,0 +1,356 @@
+#include <stdio.h>
+#include <malloc.h>
+
+int km_1[22]={5,12,62,63,84,95,113,117,161,165,179,181,188,198,216, 221, 226,230,235,249,258,263};
+int mv_1[22]={26,62,112,84,105,113,132,161,205,191,202,205,211,218,234,238,243,248,255,275,284,289};
+
+int km_2[15]={8,13,35,56,59,76,91,108,109,120,126,134,178,180,196};
+int mv_2[15]={21,35,71,107,116,155,182,190,189,181,178,178,222,197,212};
+
+int km_3[22]={263, 258, 249, 235, 230, 226, 221, 216, 198, 188, 181, 179, 165, 161, 117, 113, 95, 84, 63, 62, 12, 5};
+int mv_3[22]={237, 232, 223, 215, 212, 209, 204, 198, 178, 165, 157, 156, 139, 117, 73,   94, 77, 63, 42, 12, -38, -16};
+
+int km_4[]={669, 658, 651, 636, 626, 625, 623, 601, 580, 579, 567, 549, 530, 514, 510, 501, 499, 468, 464, 462, 458, 440, 428, 427, 424, 407, 398, 363, 336, 335, 329, 325, 311, 310, 302, 291, 289, 288, 280, 271, 267, 248, 239, 220, 206, 202, 180, 161, 152, 137, 121, 120, 94, 81, 80, 74, 69};
+int mv_4[]={612, 591, 578, 552, 535, 532, 538, 488, 455, 448, 428, 394, 363, 340, 334, 315, 314, 264, 256, 252, 245, 219, 200, 196, 197, 174, 156, 107, 112, 100, 111, 96, 96, 102, 103, 98, 98, 98, 104, 113, 104, 112, 116, 128, 137, 140, 152, 135, 126, 113, 99, 94, 68, 63, 62, 57, 52};
+
+int km_5[390]={1386,1390,1394,1402,1413,1422,1425,1441,1460,1473,1483,1545,1550,1552,1559,1567,1570,1583,1614,1634,1660,1676,1712,1716,1728,1731,1740,1747,1819,1820,1825,1836,1844,1846,1853,1855,1859,1911,1946,1968,1974,2002,2013,2030,2031,2034,2068,2077,2079,2084,2089,2092,2118,2157,2158,2161,2194,2218,2222,2229,2267,2275,2289,2292,2300,2325,2328,2332,2335,2342,2366,2370,2380,2390,2443,2493,2503,2516,2523,2533,2546,2568,2572,2585,2591,2613,2620,2626,2645,2654,2683,2685,2689,2702,2725,2732,2739,2740,2796,2809,2810,2827,2865,2890,2894,2955,2960,2970,2977,3000,3001,3021,3038,3040,3042,3064,3065,3090,3115,3128,3131,3147,3151,3178,3182,3205,3227,3229,3230,3238,3242,3243,3251,3252,3256,3261,3264,3281,3286,3317,3348,3398,3413,3415,3427,3429,3433,3441,3451,3452,3458,3488,3492,3522,3524,3541,3557,3561,3568,3612,3619,3621,3625,3671,3675,3682,3786,3787,3827,3853,3854,3855,3860,3863,3875,3928,3969,3994,3999,4007,4032,4034,4044,4073,4101,4116,4146,4162,4190,4200,4232,4265,4271,4287,4304,4331,4333,4375,4386,4401,4414,4422,4435,4439,4451,4459,4471,4497,4502,4511,4512,4519,4528,4535,4548,4552,4559,4566,4585,4622,4632,4639,4674,4687,4691,4692,4711,4721,4743,4749,4776,4790,4800,4824,4839,4858,4864,4872,4878,4879,4895,4909,4946,5000,5043,5053,5065,5069,5074,5077,5080,5136,5138,5142,5188,5189,5212,5225,5226,5253,5283,5321,5328,5336,5338,5355,5370,5388,5403,5410,5413,5450,5459,5474,5477,5507,5527,5553,5557,5596,5604,5611,5621,5628,5636,5668,5672,5708,5726,5727,5735,5763,5771,5776,5779,5783,5812,5818,5833,5868,5870,5872,5896,5897,5927,5935,5945,5958,5966,5974,6026,6053,6062,6066,6072,6083,6094,6117,6125,6185,6195,6222,6224,6234,6252,6254,6278,6303,6334,6336,6348,6352,6363,6372,6376,6386,6420,6424,6462,6469,6499,6507,6509,6513,6537,6586,6599,6602,6607,6633,6642,6650,6653,6660,6763,6779,6791,6804,6878,6895,6937,6987,7000,7010,7011,7022,7023,7029,7065,7074,7086,7110,7118,7119,7129,7146,7196,7208,7211,7230,7232,7249,7264,7290,7296,7310,7311,7333,7343,7346};
+int mv_5[390]={1517, 1520, 1524, 1532, 1542, 1549, 1551, 1567, 1584, 1597, 1605, 1662, 1667, 1669, 1675, 1683, 1685, 1696, 1722, 1744, 1768, 1782, 1815, 1817, 1830, 1833, 1841, 1847, 1914, 1915, 1919, 1929, 1937, 1939, 1945, 1947, 1950, 2016, 2107, 2160, 2177, 2250, 2272, 2321, 2321, 2332, 2415, 2437, 2441, 2455, 2469, 2476, 2541, 2634, 2632, 2642, 2722, 2786, 2795, 2812, 2904, 2921, 2957, 2955, 2977, 3037, 3047, 3056, 3062, 3065, 3128, 3142, 3170, 3183, 3300, 3428, 3453, 3460, 3498, 3514, 3550, 3593, 3606, 3634, 3638, 3686, 3713, 3714, 3767, 3787, 3828, 3821, 3863, 3875, 3940, 3942, 3957, 3970, 4083, 4101, 4103, 4153, 4231, 4284, 4277, 4403, 4395, 4436, 4457, 4503, 4504, 4545, 4580, 4573, 4580, 4631, 4588, 4680, 4723, 4751, 4757, 4790, 4760, 4841, 4829, 4886, 4928, 4919, 4914, 4934, 4959, 4969, 4950, 4948, 4989, 4991, 5006, 5019, 5047, 5102, 5157, 5242, 5193, 5244, 5293, 5292, 5308, 5277, 5330, 5335, 5349, 5383, 5367, 5441, 5434, 5464, 5508, 5507, 5519, 5605, 5615, 5620, 5613, 5610, 5709, 5715, 5841, 5870, 5877, 5929, 5921, 5914, 5936, 5913, 5945, 5962, 6006, 6013, 6029, 5997, 6036, 6026, 6055, 6057, 6093, 6093, 6117, 6121, 6143, 6153, 6144, 6192, 6190, 6184, 6215, 6202, 6181, 6234, 6259, 6272, 6257, 6284, 6230, 6288, 6295, 6292, 6295, 6312, 6296, 6333, 6332, 6321, 6343, 6314, 6348, 6326, 6357, 6350, 6376, 6390, 6392, 6407, 6392, 6404, 6398, 6411, 6424, 6452, 6464, 6457, 6453, 6489, 6489, 6505, 6508, 6513, 6525, 6526, 6525, 6515, 6545, 6553, 6501, 6567, 6622, 6607, 6633, 6627, 6632, 6623, 6639, 6661, 6656, 6654, 6678, 6691, 6677, 6713, 6715, 6720, 6722, 6752, 6760, 6765, 6747, 6759, 6780, 6785, 6797, 6788, 6800, 6803, 6827, 6824, 6835, 6845, 6858, 6833, 6850, 6891, 6887, 6895, 6898, 6889, 6886, 6896, 6915, 6901, 6934, 6905, 6926, 6931, 6924, 6930, 6927, 6895, 6913, 6922, 6911, 6924, 6921, 6911, 6913, 6919, 6921, 6907, 6911, 6917, 6921, 6923, 6906, 6923, 6921, 6913, 6920, 6920, 6921, 6929, 6924, 6912, 6923, 6935, 6930, 6934, 6944, 6946, 6946, 6954, 6952, 6961, 6963, 6959, 6959, 6966, 6953, 6970, 6977, 6973, 6984, 6987, 6994, 7001, 7001, 6997, 7008, 7021, 7022, 7027, 7031, 7040, 7038, 7043, 7044, 7048, 7088, 7095, 7099, 7099, 7138, 7144, 7161, 7191, 7198, 7202, 7202, 7208, 7209, 7213, 7233, 7235, 7244, 7258, 7263, 7263, 7268, 7279, 7309, 7316, 7319, 7329, 7332, 7343, 7353, 7370, 7374, 7382, 7384, 7399, 7406, 7407};
+
+/*
+void somma_vet(){
+    for(int i = 0; i < 390; i++){
+        mv_5[i] = km_5[i] + am[i];
+    }
+}   */
+
+int *km = km_5;
+int *mv = mv_5;
+int a=1386, b=7346;
+
+#define Max_INT 2147483647
+#define Min_INT -2147483647
+
+typedef struct nd{
+    int km;
+    int mv;
+    int id;
+    struct nd *next;
+    struct nd *prev;
+    struct nd *right;
+} Nodo;
+typedef Nodo *MLista;
+
+typedef struct nod{
+    int stazione;
+    struct nod *next;
+
+} LNodo;
+typedef LNodo *Lista;
+
+
+MLista add_Nodo(MLista P, int km, int mv, MLista SW_r, int n){
+    MLista N_Nodo = (MLista)malloc(sizeof(Nodo));
+    N_Nodo->km = km;
+    N_Nodo->mv = mv;
+    N_Nodo->right = NULL;
+    N_Nodo->next = NULL;
+    if(SW_r == NULL && P == NULL){  //Caso Testa
+        N_Nodo->prev = P;
+        N_Nodo->id = n;
+    }
+    else if (SW_r == NULL){         //Caso Next
+        P->next = N_Nodo;
+        N_Nodo->prev = P;
+        N_Nodo->id = n;
+    }
+    else                            //Caso Right
+    {
+        SW_r->right = N_Nodo;
+        N_Nodo->prev = SW_r;
+        N_Nodo->id = n+1;
+    }
+    return N_Nodo;
+}
+
+Lista Inserisci_in_testa(Lista Testa, int elem){
+    Lista N_testa = (Lista)malloc(sizeof(LNodo));
+    N_testa->stazione = elem;
+    N_testa->next = Testa;
+    return N_testa;
+    //nuova_tesa.next = head
+    //return nuova_testa
+};
+
+void print_MLista(MLista Nodo){
+
+    if(Nodo->next == NULL && Nodo->right == NULL){
+        printf("-%d(%d)",Nodo->km, Nodo->id);
+        return;
+    }                                       //Passo Base
+
+    if(Nodo->prev == NULL){
+        if(Nodo->next != NULL) {
+            printf("%d(%d)", Nodo->km, Nodo->id);
+            return print_MLista(Nodo->next);
+        }
+        if(Nodo->right != NULL){
+            printf("%d(%d)", Nodo->km, Nodo->id);
+            return print_MLista(Nodo->right);
+        }
+    }                                       //Gestire inizio
+
+
+    if(Nodo->next != NULL){                 //Caso Next
+        printf("-%d(%d)",Nodo->km, Nodo->id);
+        return print_MLista(Nodo->next);
+    }
+    else if(Nodo->right != NULL){           //Caso Right
+        printf("-%d(%d)",Nodo->km, Nodo->id);
+        return print_MLista(Nodo->right);
+    }
+
+}
+
+MLista crea_MLista(MLista Testa, int vet_km[], int vet_mv[], int fine, int i){
+    MLista temp, prev = Testa, Max_s, Min_s;
+    int controllore = vet_mv[i-1], Max_mv = Min_INT, Min_mv = Max_INT, count = 1;
+    if(Testa->km < fine){               //a < b
+        do{
+
+            if(vet_km[i] == fine){
+                //printf("Stazione Finale\n");
+                if(vet_km[i]<= controllore) {
+                    //printf("Aggiungo il nodo finale in next\n");
+                    temp = add_Nodo(prev, vet_km[i], vet_mv[i], NULL, count);
+                    return temp;
+                }
+                else{
+                    //printf("Aggiungo il nodo finale in right\n");
+                    temp = add_Nodo(NULL, vet_km[i], vet_mv[i], Max_s, count);
+                    return temp;
+                }
+            }//    Gestire stazione finale
+
+            else if(vet_km[i]<=controllore){                        // S1 - S2
+                //printf("Aggiungendo %d: Il nodo %d ha come next %d\t\tcontrollore: %d \n",vet_km[i], prev->km, vet_km[i],controllore);
+                temp = add_Nodo(prev, vet_km[i], vet_mv[i], NULL, count);
+                if(vet_mv[i] >= Max_mv) {
+                    Max_mv = vet_mv[i];
+                    Max_s = temp;
+                }
+                i++;
+                prev = temp;
+            }
+
+            else{                                                  // S1 |_ S2
+                //printf("Aggiungendo %d: Il nodo %d ha come right %d\t\tcontrollore: %d\n",vet_km[i], Max_s->km, vet_km[i],controllore);
+                temp = add_Nodo(NULL,vet_km[i], vet_mv[i], Max_s, count);
+                count++;
+                i++;
+                prev = Max_s;
+                controllore = Max_s->mv;
+                Max_mv = 0;
+                Max_s = temp;
+                prev = temp;
+            }
+            //printf("%d<=%d\n",vet_km[i],fine);
+        }while(vet_km[i] <= fine);
+    }
+    else{           // a > b
+        do{
+
+            if(vet_km[i] == fine){
+                //printf("Stazione Finale\n");
+                if(vet_km[i] >= controllore) {
+                    //printf("Aggiungo il nodo finale in next\n");
+                    temp = add_Nodo(prev, vet_km[i], vet_mv[i], NULL, count);
+                    return temp;
+                }
+                else{
+                    //printf("Aggiungo il nodo finale in right\n");
+                    temp = add_Nodo(NULL, vet_km[i], vet_mv[i], Min_s, count);
+                    return temp;
+                }
+            }//    Gestire stazione finale
+
+            else if(vet_km[i] >= controllore){                        // S1 - S2
+                //printf("Aggiungendo %d: Il nodo %d ha come next %d\t\tcontrollore: %d \n",vet_km[i], prev->km, vet_km[i],controllore);
+                temp = add_Nodo(prev, vet_km[i], vet_mv[i], NULL, count);
+                if(vet_mv[i] <= Min_mv) {
+                    Min_mv = vet_mv[i];
+                    Min_s = temp;
+                }
+                i++;
+                prev = temp;
+            }
+
+            else{                                                  // S1 |_ S2
+                //printf("Aggiungendo %d: Il nodo %d ha come right %d\t\tcontrollore: %d\n",vet_km[i], Min_s->km, vet_km[i],controllore);
+                temp = add_Nodo(NULL,vet_km[i], vet_mv[i], Min_s, count);
+                count++;
+                i++;
+                prev = Min_s;
+                controllore = Min_s->mv;
+                Min_mv = Max_INT;
+                Min_s = temp;
+                prev = temp;
+            }
+            //printf("%d<=%d\n",vet_km[i],fine);
+        }while(vet_km[i] >= fine);
+    }
+    return temp;
+}
+
+int Binary_reserch(int i,int f,int v){
+    if(v < km[i] || v > km[f]){
+        printf("Errore: %d non è compreso tra %d e %d\n",v,km[i],km[f]);
+        return -1;
+    }
+    int m;
+    while(i<=f){
+        m = (i+f)/2;
+        if(km[m]==v)
+            return m;
+        if(km[m]>v)
+            f = m-1;
+        else
+            i = m+1;
+    }
+    return -1;
+}
+
+int Binary_reserch_rev(int i,int f,int v){
+    if(v > km[i] || v <km[f])
+        return -1;
+    int m;
+    while(i <= f){
+        m = (i+f)/2;
+        if(km[m]==v)
+            return m;
+        if(km[m]<v)
+            f = m-1;
+        else
+            i = m+1;
+    }
+    return -1;
+}
+
+Lista Percorso(MLista Coda, int inizio){                //a<b
+
+    MLista staz_a = Coda->prev;
+    int staz_min = Max_INT, staz_min_id = 0;
+    int fine = Coda->km, fine_id = Coda->id;
+
+    Lista testa = (Lista)malloc(sizeof(LNodo));
+    testa->stazione = Coda->km;                         //Coda della lista
+    testa->next = NULL;
+
+    while(staz_a != NULL){
+        if(staz_a->km != inizio){
+            if(fine_id-1 <= staz_a->id){
+                if(staz_a->mv>=fine && staz_a->km<=staz_min){
+                    staz_min = staz_a->km;
+                    staz_min_id = staz_a->id;
+                }
+                staz_a = staz_a->prev;
+            }
+            else{
+                testa = Inserisci_in_testa(testa, staz_min);
+                //printf("Aggiunta alla lista la stazione %d\n",staz_min);
+                fine = staz_min;
+                fine_id = staz_min_id;
+                staz_min = 2147483647;
+            }
+            //printf("%d != Null\n",staz_a->km);
+        }
+        else{
+            testa = Inserisci_in_testa(testa, staz_min);
+            //printf("Aggiunta alla lista la stazione %d\n",staz_min);
+            testa = Inserisci_in_testa(testa, staz_a->km);
+            return testa;
+        }
+    }
+    return testa;
+}
+
+Lista Percorso_r(MLista Coda, int inizio){
+
+    MLista staz_a = Coda->prev;
+    int staz_min = Max_INT, staz_min_id = 0;
+    int fine = Coda->km, fine_id = Coda->id;
+
+    Lista testa = (Lista)malloc(sizeof(LNodo));
+    testa->stazione = Coda->km;                         //Coda della lista
+    testa->next = NULL;
+
+    while(staz_a != NULL){
+        if(staz_a->km != inizio){
+            if(fine_id-1 <= staz_a->id){
+                if(staz_a->mv<=fine && staz_a->km<=staz_min){
+                    staz_min = staz_a->km;
+                    staz_min_id = staz_a->id;
+                }
+                staz_a = staz_a->prev;
+            }
+            else{
+                testa = Inserisci_in_testa(testa, staz_min);
+                //printf("Aggiunta alla lista la stazione %d\n",staz_min);
+                fine = staz_min;
+                fine_id = staz_min_id;
+                staz_min = Max_INT;
+            }
+            //printf("%d != Null\n",staz_a->km);
+        }
+        else{
+            testa = Inserisci_in_testa(testa, staz_min);
+            //printf("Aggiunta alla lista la stazione %d\n",staz_min);
+            testa = Inserisci_in_testa(testa, staz_a->km);
+            return testa;
+        }
+    }
+    return testa;
+}
+
+void stampa_path(Lista Testa){
+    printf("%d",Testa->stazione);
+    Testa = Testa->next;
+    while(Testa != NULL){
+        printf(" %d",Testa->stazione);
+        Testa = Testa->next;
+    }
+    return;
+}
+
+void cerca_percorso(int a,int b){
+    int t;
+    if(a<b){
+        t = Binary_reserch(0,sizeof(km_5)/sizeof(km_5[0]),a);                                         // 0 - 21 Attention!
+        MLista Testa = add_Nodo(NULL, km[t], mv[t], NULL, 1);
+        MLista Coda = crea_MLista(Testa, km, mv, b, t+1);
+        //print_MLista(Testa);
+        Lista path = Percorso(Coda, a);
+        printf("\nIl percorso migliore e': \n");
+        stampa_path(path);
+    }
+    else{
+        t = Binary_reserch_rev(0, sizeof(km_5)/sizeof(km_5[0]), a);                                   // 0 - 21 Attention!
+        MLista Testa = add_Nodo(NULL, km[t], mv[t], NULL, 1);
+        MLista Coda = crea_MLista(Testa, km, mv, b, t+1);
+        //print_MLista(Testa);
+        Lista path = Percorso_r(Coda, a);
+        printf("\nIl percorso migliore e': \n");
+        stampa_path(path);
+    }
+    return;
+}
+
+int main(){
+    //somma_vet();
+    /*
+    for(int i = 0; i < 390; i++){
+        printf("%d, ",mv_5[i]);
+    }*/
+    cerca_percorso(a,b);
+
+    return 1;
+}
