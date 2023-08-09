@@ -3,16 +3,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//  /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   //
-
-// Definisci la struttura del nodo nella lista collegata
+//Tabella hash
 struct Node {
     int ric;
     int value;
     struct Node* next;
 };
 
-// Definisci la struttura della tabella hash
 struct HashTable {
     int max;
     int size;
@@ -20,7 +17,8 @@ struct HashTable {
 };
 typedef struct HashTable* Hash;
 
-
+/*
+//Forse si può rimuovere
 bool is_prime(int num) {
     if (num <= 1) {
         return false;
@@ -34,6 +32,7 @@ bool is_prime(int num) {
     return true;
 }
 
+//Forse si può rimuovere
 int find_nearest_prime(int n) {
     if (n <= 1) {
         return -1; // Indica un errore o nessun primo trovato
@@ -50,6 +49,7 @@ int find_nearest_prime(int n) {
 
     return upper_prime;
 }
+*/
 
 // Funzione di hash: restituisci il resto della divisione per la dimensione dell'array
 unsigned int hashFunction(int value, int size) {
@@ -61,7 +61,7 @@ unsigned int hashFunction(int value, int size) {
 // Funzione per creare una nuova tabella hash con la dimensione specificata
 struct HashTable* createHashTable(int size) {
     struct HashTable* table = (struct HashTable*)malloc(sizeof(struct HashTable));
-    table->size = find_nearest_prime(size);
+    table->size = size;//size
     table->max = 0;
     table->array = (struct Node**)malloc(table->size * sizeof(struct Node*));
     for (int i = 0; i < table->size; i++) {
@@ -101,45 +101,53 @@ void insert(struct HashTable* table, int value) {
     return;
 }
 
+// Funzione per trovare il massimo valore nella tabella hash
+int find_max(struct HashTable* table){
+    int max = 0;
+    for(int i = 0; i < table->size; i++){               //Ciclo su tutti gli elementi della tabella
+        struct Node* currentNode = table->array[i];
+        while(currentNode != NULL){
+            if(currentNode->value > max)
+                max = currentNode->value;
+            currentNode = currentNode->next;
+        }
+    }
+    return max;
+}
+
 // Funzione per rimuovere un elemento dalla tabella hash dato la chiave
 void removeNode(struct HashTable* table, int value) {
     int index = hashFunction(value, table->size);
     struct Node* currentNode = table->array[index];
     struct Node* prevNode = NULL;
     while (currentNode != NULL) {
-        if (currentNode->value == value) {
-            if (prevNode != NULL) {
-                prevNode->next = currentNode->next;
-            } else {
-                table->array[index] = currentNode->next;
+        if (currentNode->value == value){          //Il nodo da eliminare è stato trovato
+            if(currentNode->ric > 1){               //Se il nodo ha più di una ricorrenza, decrementa il contatore
+                currentNode->ric--;
+                printf("rottamata\n");
+                return;
             }
-            free(currentNode);
-            return;
+            else{                                   //Altrimenti elimina il nodo
+                if(prevNode != NULL) {
+                    prevNode->next = currentNode->next;
+                } else {
+                    table->array[index] = currentNode->next;
+                }
+                if(currentNode->value == table->max)
+                    table->max = find_max(table);
+                free(currentNode);
+                printf("rottamata\n");
+                return; 
+            }
         }
         prevNode = currentNode;
         currentNode = currentNode->next;
     }
-}
-
-void printHashTabele(struct HashTable* table){
-    if(table == NULL){
-        printf("La tabella e' vuota\n");
-        return;
-    }
-    printf("Max: %d\n", table->max);
-    for(int i = 0; i < table->size; i++){
-        struct Node* currentNode = table->array[i];
-        printf("%2d: ", i);
-        while(currentNode != NULL){
-            printf("%3d ", currentNode->value);
-            printf("(%2d) ", currentNode->ric);
-            currentNode = currentNode->next;
-        }
-        printf("\n");
-    }
+    printf("non rottamata\n");
     return;
 }
 
+// Funzione per distruggere la tabella hash
 void destroyHashTable(struct HashTable* table){
     if(table == NULL){
         return;
@@ -158,33 +166,56 @@ void destroyHashTable(struct HashTable* table){
     free(table);
 }
 
-//  /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   //
+// Funzione per stampare la tabella hash
+void printHashTabele(struct HashTable* table){
+    if(table == NULL){
+        printf("La tabella e' vuota\n");
+        return;
+    }
+    printf("Max: %d\n", table->max);
+    for(int i = 0; i < table->size; i++){
+        struct Node* currentNode = table->array[i];
+        printf("%2d: ", i);
+        while(currentNode != NULL){
+            printf("%3d ", currentNode->value);
+            printf("(%2d) ", currentNode->ric);
+            currentNode = currentNode->next;
+        }
+        printf("\n");
+    }
+    return;
+}
+//  /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   //
 
+
+
+//Albero
 typedef struct nodo{
     int val;
     struct nodo* left;
     struct nodo* right;
-    struct nodo* parent;
     Hash Tabella;
 }Nodo;
 typedef Nodo* Albero;
 
+Albero ultimo_nodo_aggiunto = NULL;
+
 //Inserisci un nodo nell'albero
-Albero Inserisci(Albero a, Albero parent, int elem, struct HashTable* table){
+Albero Inserisci(Albero a, int elem, struct HashTable* table){
     if(a == NULL){
         Albero nuovo = (Albero)malloc(sizeof(Nodo));
         nuovo->val = elem;
         nuovo->left = NULL;
         nuovo->right = NULL;
-        nuovo->parent = parent;
         nuovo->Tabella = table;
+        ultimo_nodo_aggiunto = nuovo;
         return nuovo;
     }
     if(elem < a->val){
-        a->left = Inserisci(a->left, a, elem, table);
+        a->left = Inserisci(a->left, elem, table);
     }
     else{
-        a->right = Inserisci(a->right, a, elem, table);
+        a->right = Inserisci(a->right, elem, table);
     }
     return a;
 }
@@ -192,11 +223,11 @@ Albero Inserisci(Albero a, Albero parent, int elem, struct HashTable* table){
 //Cerca un nodo nell'albero
 Albero Cerca(Albero a, int elem){
     if(a == NULL){
-        printf("Elemento non trovato");
+        //printf("Elemento non trovato");
         return NULL;
     }
     if(a->val == elem){
-        printf("Elemento trovato");
+        //printf("Elemento trovato");
         return a;
     }
     if(elem < a->val){
@@ -207,75 +238,59 @@ Albero Cerca(Albero a, int elem){
     }
 }
 
-Albero min_a(Albero a){
-    if(a->left == NULL){
-        return a;
+// Trova il nodo con il valore minimo nell'sottoalbero
+Albero TrovaMinimo(Albero nodo) {
+    while (nodo->left != NULL) {
+        nodo = nodo->left;
     }
-    return min_a(a->left);
+    return nodo;
 }
 
-Albero max_a(Albero a){
-    if(a->right == NULL){
-        return a;
+// Rimuove un nodo con un determinato valore dall'albero
+Albero RimuoviNodo(Albero radice, int valore) {
+    if (radice == NULL) {
+        printf("non demolita\n");
+        return radice;
     }
-    return max_a(a->right);
-}
-
-//Rimuovi un nodo dall'albero
-/*
-int Rimuovi_nodo(Albero a, int km){
-    if(a == NULL){
-        printf("Errore");
-        return -1;
-    }
-
-    Albero temp;
-    if(a->val != km){
-        temp = Cerca(a, km);
+    // Trova il nodo da rimuovere
+    if (valore < radice->val) {
+        radice->left = RimuoviNodo(radice->left, valore);
+    } else if (valore > radice->val) {
+        radice->right = RimuoviNodo(radice->right, valore);
     }
     else{
-        temp = a;
+        // Caso 1: Nodo senza figli o con un solo figlio
+        if (radice->left == NULL && radice->right == NULL) {
+            destroyHashTable(radice->Tabella);
+            free(radice);
+            printf("demolita\n");
+            return NULL;
+        }else if (radice->left == NULL) {
+            Nodo* temp = radice->right;
+            destroyHashTable(radice->Tabella);
+            free(radice);
+            printf("demolita\n");
+            return temp;
+        } else if (radice->right == NULL) {
+            Nodo* temp = radice->left;
+            destroyHashTable(radice->Tabella);
+            free(radice);
+            printf("demolita\n");
+            return temp;
+        }
+
+        Nodo* minimoSuccessore = TrovaMinimo(radice->right);
+        radice->val = minimoSuccessore->val;
+        destroyHashTable(radice->Tabella);
+        radice->Tabella = minimoSuccessore->Tabella;
+        radice->right = RimuoviNodo(radice->right, minimoSuccessore->val);
     }
 
-
-    if(temp->left == NULL && temp->right == NULL){      //Caso in cui il nodo da eliminare è una foglia
-        if(temp->parent->left == temp){
-            temp->parent->left = NULL;
-        }
-        else{
-            temp->parent->right = NULL;
-        }
-        free(temp);
-        return 0;
-    }
-    if(temp->left == NULL){                            //Caso in cui il nodo da eliminare ha un solo figlio sinistro
-        if(temp->parent->left == temp){
-            temp->parent->left = temp->right;
-        }
-        else{
-            temp->parent->right = temp->right;
-        }
-        free(temp);
-        return 0;
-    }
-    if(temp->right == NULL){                            //Caso in cui il nodo da eliminare ha un solo figlio destro
-        if(temp->parent->left == temp){
-            temp->parent->left = temp->left;
-        }
-        else{
-            temp->parent->right = temp->left;
-        }
-        free(temp);
-        return 0;
-    }
-    else{
-        Albero min = min_a(temp->right);
-        temp->val = min->val;
-        
-    }
-    
+    return radice;
 }
-*/
+
+
+
 void InOrder(Albero a){
     if(a == NULL){
         return;
@@ -286,102 +301,44 @@ void InOrder(Albero a){
     InOrder(a->right);
 }
 
-//  /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   /   //
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-typedef struct HashTable
-{
-    int* value;
-    int* ric;
-    int size;
-    int max;
-}HT;
-
-typedef struct nodo{
-    int val;
-    struct nodo* left;
-    struct nodo* right;
-    struct nodo* parent;
-    HT *HashTable;
-}Nodo;
-typedef Nodo* Albero;
-
-
-
-Albero Inserisci(Albero a, Albero parent, int elem, struct HashTable table){
-    if(a == NULL){
-        Albero nuovo = (Albero)malloc(sizeof(Nodo));
-        nuovo->val = elem;
-        nuovo->left = NULL;
-        nuovo->right = NULL;
-        nuovo->parent = parent;
-        nuovo->HashTable = &table;
-        printf("Inserisco la stazione %d\n", elem);
-        return nuovo;
-    }
-    if(elem < a->val){
-        a->left = Inserisci(a->left, a, elem, table);
-    }
-    else{
-        a->right = Inserisci(a->right, a, elem, table);
-    }
-    return a;
-}
-
-void InOrder(Albero a){
-    if(a == NULL){
-        return;
-    }
-    InOrder(a->left);
-    printf("%d ", a->val);
-    InOrder(a->right);
-}
-*/
-
 int main(){
     char input[20];
     int km, size, temp;
-    Albero autostrada = NULL;
+    Albero root = NULL;
+    //Albero I_cant_lose_root = NULL,
+    //Inizio lettura input
     scanf("%s", input);
     do{
-        
-    if(strcmp(input, "aggiungi-stazione") == 0){        //Gestisco aggiungi-stazione
-        scanf("%d", &km);
-        scanf("%d", &size);
-        struct HashTable* table = createHashTable(size);
 
-        for(int i=0;i<size;i++){
-            scanf("%d", &temp);
-            insert(table, temp);
+        if(strcmp(input, "aggiungi-stazione") == 0){        //Gestisco aggiungi-stazione
+            scanf("%d", &km);
+            if(Cerca(root, km) != NULL){
+                printf("non aggiunta\n");
+            }
+            else{
+                scanf("%d", &size);
+                    
+                struct HashTable* table = createHashTable(size);
+
+                for(int i=0;i<size;i++){
+                    scanf("%d", &temp);
+                    insert(table, temp);
+                }
+                root = Inserisci(root, km, table);
+                printf("aggiunta %d\n", ultimo_nodo_aggiunto->val);
+            }
+        }
+        
+        //I_cant_lose_root = root;
+        if(strcmp(input, "demolisci-stazione") == 0){
+            scanf("%d", &km);
+            root = RimuoviNodo(root, km);
         }
 
-        autostrada = Inserisci(autostrada, NULL, km, table);
-    }
-    /*
-    if(strcmp(input, "demolisci-stazione") == 0){
-        scanf("%d", &km);
 
-    }
-    */
-    if(strcmp(input, "aggiungi-auto") == 0){
-        scanf("%d", &km);
-        scanf("%d", &temp);
-        Albero stazione = Cerca(autostrada, km);
-        insert(stazione->Tabella, temp);
-    }
-    
     }while(scanf("%s", input) != EOF);
-    InOrder(autostrada);
+    printf("Primo nodo aggiunto: %d\n", root->val);
+    printf("Ultimo nodo aggiunto: %d\n", ultimo_nodo_aggiunto->val);
+    //InOrder(root);
     return 0;
 }
